@@ -6,7 +6,7 @@ namespace ShoeTools.Api.DataAccess;
 
 public class DBContext : IDBContext
 {
-    private readonly string _connectionString = "server=localhost;user=root;password=Q.34Isrg;database=Ecommerce;port=3306;";
+    private readonly string _connectionString = "server=localhost;user=root;password=Q.34Isrg;database=ShoeTools;port=3306;";
     
     private MySqlConnection _connection;
     

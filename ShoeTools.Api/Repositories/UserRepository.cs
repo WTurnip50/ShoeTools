@@ -1,32 +1,59 @@
 ﻿using ShoeTools.Api.Repositories.Interfaces;
 using ShoeTools.Core.Entities;
+using Dapper;
+using Dapper.Contrib.Extensions;
+using ShoeTools.Api.DataAccess.Interfaces;
 
 namespace ShoeTools.Api.Repositories;
 
 public class UserRepository : IUserRepository
 {
-    public async Task<List<User>> GetAllAsync()
+    private readonly IDBContext _dbContext;
+
+    public UserRepository(IDBContext dbContext)
     {
-        throw new NotImplementedException();
+        _dbContext = dbContext;
     }
 
-    public async Task<User> GetUserById(int id)
+    public async Task<List<AppUsers>> GetAllAsync()
     {
-        throw new NotImplementedException();
+        const string sql = "SELECT * FROM AppUsers WHERE IsDeleted = 0";
+        var users = await _dbContext.Connection.QueryAsync<AppUsers>(sql);
+        return users.ToList();
     }
 
-    public async Task<User> SaveAsync(User user)
+    public async Task<AppUsers> GetUserById(int id)
     {
-        throw new NotImplementedException();
+        var user = await _dbContext.Connection.GetAsync<AppUsers>(id);
+        if (user == null)
+        {
+            return null;
+        }
+
+        return user.IsDeleted == true ? null : user;
     }
 
-    public async Task<User> UpdateAsync(User user)
+    public async Task<AppUsers> SaveAsync(AppUsers appUsers)
     {
-        throw new NotImplementedException();
+        appUsers.Id = await _dbContext.Connection.InsertAsync(appUsers);
+        return appUsers;
+    }
+
+    public async Task<AppUsers> UpdateAsync(AppUsers appUsers)
+    {
+        await _dbContext.Connection.UpdateAsync(appUsers);
+        return appUsers;
     }
 
     public async Task<bool> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        var user = await GetUserById(id);
+        if (user == null)
+        {
+            return false;
+        }
+
+        user.IsDeleted = true;
+        return await _dbContext.Connection.UpdateAsync(user);
     }
 }

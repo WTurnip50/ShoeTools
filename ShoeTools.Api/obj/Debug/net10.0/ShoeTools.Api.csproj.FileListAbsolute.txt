@@ -31,3 +31,12 @@ C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\obj\Debug\net10.0\refint
 C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\obj\Debug\net10.0\ShoeTools.Api.pdb
 C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\obj\Debug\net10.0\ShoeTools.Api.genruntimeconfig.cache
 C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\obj\Debug\net10.0\ref\ShoeTools.Api.dll
+C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\bin\Debug\net10.0\Dapper.dll
+C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\bin\Debug\net10.0\Dapper.Contrib.dll
+C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\bin\Debug\net10.0\MySqlConnector.dll
+C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\bin\Debug\net10.0\ShoeTools.Core.dll
+C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\bin\Debug\net10.0\ShoeTools.Core.pdb
+C:\Users\snach\Documents\GitHub\ShoeTools\ShoeTools.Api\obj\Debug\net10.0\ShoeTools.Api.sourcelink.json

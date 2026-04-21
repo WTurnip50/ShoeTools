@@ -1,41 +1,35 @@
-var builder = WebApplication.CreateBuilder(args);
+using Dapper.Contrib.Extensions;
+using ShoeTools.Api.DataAccess;
+using ShoeTools.Api.DataAccess.Interfaces;
+using ShoeTools.Api.Repositories;
+using ShoeTools.Api.Repositories.Interfaces;
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IDBContext, DBContext>();
+
+SqlMapperExtensions.TableNameMapper = entityType =>
+{
+    var name = entityType.Name;
+    if (name.Contains("ShoeTools.Core.Entities"))
+        name = name.Replace("ShoeTools.Core.Entities", "");
+    var letters = name.ToCharArray();
+    letters[0] = char.ToUpper(letters[0]);
+    return new string(letters);
+};
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-    {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
-    })
-    .WithName("GetWeatherForecast");
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

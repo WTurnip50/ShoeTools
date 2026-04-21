@@ -3,9 +3,9 @@ using ShoeTools.Core.Entities;
 
 public interface IUserRepository
 {
-    Task<List<User>> GetAllAsync();
-    Task<User> GetUserById(int id);
-    Task <User> SaveAsync(User user);
-    Task<User> UpdateAsync(User user);
+    Task<List<AppUsers>> GetAllAsync();
+    Task<AppUsers> GetUserById(int id);
+    Task <AppUsers> SaveAsync(AppUsers appUsers);
+    Task<AppUsers> UpdateAsync(AppUsers appUsers);
     Task<bool> DeleteAsync(int id);
 }
