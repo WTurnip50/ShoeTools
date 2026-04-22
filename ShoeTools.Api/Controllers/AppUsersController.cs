@@ -39,7 +39,7 @@ public class AppUsersController : ControllerBase
        }
        return Ok(response);
    }
-
+   
    [HttpPost]
    public async Task<ActionResult<Response<AppUsers>>> Post([FromBody] AppUsers appUsers)
    {
@@ -72,4 +72,25 @@ public class AppUsersController : ControllerBase
        }
        return Ok(response);
    }
+   
 }
+
+
+
+/*[HttpPost]
+[Route("AppUsers")]
+public async Task<ActionResult<Response<AppUsers>>> Login([FromBody] AppUsers user)
+{
+    var foundUser = await _userRepository.Login(user);
+    var response = new Response<AppUsers>();
+
+    if (foundUser == null)
+    {
+        response.Message = "Credenciales inválidas";
+        return Unauthorized(response);
+    }
+
+    response.Data = foundUser;
+    response.Message = "Login exitoso";
+    return Ok(response);
+}*/

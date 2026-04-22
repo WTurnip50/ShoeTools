@@ -7,4 +7,6 @@ public class AppUsers : EntityBase
 {
     public string username { get; set; }
     public string password { get; set; }
+    public bool IsActive { get; set; }
 }
+

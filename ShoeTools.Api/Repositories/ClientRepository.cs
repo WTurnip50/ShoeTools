@@ -55,4 +55,5 @@ public class ClientRepository : IClientRepository
         client.IsDeleted = true;
         return await _dbContext.Connection.UpdateAsync(client);
     }
+    
 }

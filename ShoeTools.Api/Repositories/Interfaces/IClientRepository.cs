@@ -9,4 +9,5 @@ public interface IClientRepository
     Task <Client> SaveAsync(Client client);
     Task<Client> UpdateAsync(Client client);
     Task<bool> DeleteAsync(int id);
+ 
 }

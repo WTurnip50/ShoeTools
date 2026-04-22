@@ -56,4 +56,28 @@ public class UserRepository : IUserRepository
         user.IsDeleted = true;
         return await _dbContext.Connection.UpdateAsync(user);
     }
+
+   /* public async Task<AppUsers?> Login(AppUsers user)
+    {
+        const string SQL = @"SELECT * FROM AppUsers WHERE username = @username and  password = @password";
+        var result = await _dbContext.Connection.QueryAsync<AppUsers>(SQL,
+            new {username= user.username, password = user.password});
+        var foundUser = result.FirstOrDefault();
+        if (result == null)
+        {
+            return null;
+        }
+
+        if (foundUser.IsActive)
+        {
+            foundUser.IsActive = false;
+        }
+        else
+        {
+            foundUser.IsActive = true;
+        }
+        await _dbContext.Connection.UpdateAsync(foundUser);
+        return foundUser;
+    }*/
+    
 }

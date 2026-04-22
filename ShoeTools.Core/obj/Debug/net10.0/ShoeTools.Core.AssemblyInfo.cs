@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ShoeTools.Core")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d7d5198d24a871e9bef361a0e043d0e3ab5389eb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+06c09abb32a795b3fb74e99671bbce25fc494373")]
 [assembly: System.Reflection.AssemblyProductAttribute("ShoeTools.Core")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ShoeTools.Core")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

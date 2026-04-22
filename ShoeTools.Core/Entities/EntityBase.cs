@@ -9,3 +9,4 @@ public abstract class EntityBase
     public string UpdatedBy { get; set; }
     public DateTime UpdatedDate { get; set; }
 }
+

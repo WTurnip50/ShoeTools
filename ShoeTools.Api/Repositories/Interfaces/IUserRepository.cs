@@ -8,4 +8,7 @@ public interface IUserRepository
     Task <AppUsers> SaveAsync(AppUsers appUsers);
     Task<AppUsers> UpdateAsync(AppUsers appUsers);
     Task<bool> DeleteAsync(int id);
+    
 }
+
+//Task<AppUsers> Login(AppUsers user);
