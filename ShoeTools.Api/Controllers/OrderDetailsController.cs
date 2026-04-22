@@ -4,7 +4,8 @@ using ShoeTools.Core.Entities;
 using ShoeTools.Core.Http;
 
 namespace ShoeTools.Api.Controllers;
-
+[ApiController]
+[Route("api/[controller]")]
 public class OrderDetailsController : ControllerBase
 {
     private readonly IOrderDetailsRepository _orderDetailsRepository;
