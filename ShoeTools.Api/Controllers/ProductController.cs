@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShoeTools.Api.Repositories.Interfaces;
+using ShoeTools.Api.Services.Interfaces;
+using ShoeTools.Core.Dto;
 using ShoeTools.Core.Entities;
 using ShoeTools.Core.Http;
 
@@ -9,67 +11,69 @@ namespace ShoeTools.Api.Controllers;
 [Route("api/[controller]")]
 public class ProductController : ControllerBase
 {
-    private readonly IProductRepository _productRepository;
+    private readonly IProductService _productService;
    
-    public  ProductController(IProductRepository productRepository)
+    public  ProductController(IProductService productService)
     {
-        _productRepository = productRepository;
+        _productService = productService;
     }
     
     [HttpGet]
-    public async Task <ActionResult<Response<List<Product>>>> GetAllAsync()
+    public async Task <ActionResult<Response<List<ProductDto>>>> GetAllAsync()
     {
-        var products = await _productRepository.GetAllAsync();
-        var response = new Response<List<Product>>();
-        response.Data = products;
+        var response = new Response<List<ProductDto>>()
+        {
+            Data = await _productService.GetAllProducts()
+        };
         return Ok(response);
     }
 
     [HttpGet]
-    [Route("{id}")]
-    public async Task<ActionResult<Response<Product>>> GetById(int id)
+    [Route("{id:int}")]
+    public async Task<ActionResult<Response<ProductDto>>> GetById(int id)
     {
-        var product = await _productRepository.GetProductById(id);
-        var response = new Response<Product>();
-        response.Data = product;
-        if (product == null)
+        var response = new Response<ProductDto>();
+        if (!await _productService.ProductExists(id))
         {
-            response.Message = "Product not found";
+            response.Errors.Add("Product not found");
             return NotFound(response);
         }
+
+        response.Data = await _productService.GetById(id);
         return Ok(response);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Response<Product>>> Post([FromBody] Product product)
+    public async Task<ActionResult<Response<ProductDto>>> Post([FromBody] ProductDto productDto)
     {
-        product = await _productRepository.SaveAsync(product);
-        var response = new Response<Product>();
-        response.Data = product;
-        
-        return Created($"/api/[controller]/{product.Id}",response);
+        var response = new Response<ProductDto>
+        {
+            Data = await _productService.SaveAsync(productDto)
+        };
+        return Created($"/api/[controller]/{productDto.Id}",response);
     }
 
     [HttpPut]
-    public async Task<ActionResult<Response<Product>>> Update([FromBody] Product product)
+    public async Task<ActionResult<Response<ProductDto>>> Update([FromBody] ProductDto productDto)
     {
-        var result = await _productRepository.UpdateAsync(product);
-        var response = new Response<Product> { Data = result };
+        var response = new Response<ProductDto>();
+        if (!await _productService.ProductExists(productDto.Id))
+        {
+            response.Errors.Add("Product not found");
+            return NotFound(response);
+        }
+
+        response.Data = await _productService.UpdateAsync(productDto);
         return Ok(response);
     }
 
     [HttpDelete]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<ActionResult<Response<bool>>> Delete(int id)
     {
         var response = new Response<bool>();
-        var result = await _productRepository.DeleteAsync(id);
+        var result = await _productService.DeleteAsync(id);
         response.Data = result;
-        if (result == null)
-        {
-            response.Message = "Product not found";
-            return NotFound(response);
-        }
         return Ok(response);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShoeTools.Api.Repositories.Interfaces;
+using ShoeTools.Api.Services.Interfaces;
+using ShoeTools.Core.Dto;
 using ShoeTools.Core.Entities;
 using ShoeTools.Core.Http;
 
@@ -9,52 +11,58 @@ namespace ShoeTools.Api.Controllers;
 [Route("api/[controller]")]
 public class AppUsersController : ControllerBase
 {
-   private readonly IUserRepository _userRepository;
+   private readonly IUserService _userService;
    
-   public  AppUsersController(IUserRepository userRepository)
+   public  AppUsersController(IUserService userService)
    {
-      _userRepository = userRepository;
+      _userService = userService;
    }
    
    [HttpGet]
-   public async Task <ActionResult<Response<List<AppUsers>>>> GetAllAsync()
+   public async Task <ActionResult<Response<List<AppUsersDto>>>> GetAllAsync()
    {
-       var users = await _userRepository.GetAllAsync();
-       var response = new Response<List<AppUsers>>();
-       response.Data = users;
+       var response = new Response<List<AppUsersDto>>()
+       {
+           Data = await _userService.GetAllUsers()
+       };
        return Ok(response);
    }
 
    [HttpGet]
    [Route("{id}")]
-   public async Task<ActionResult<Response<AppUsers>>> GetById(int id)
+   public async Task<ActionResult<Response<AppUsersDto>>> GetById(int id)
    {
-       var user = await _userRepository.GetUserById(id);
-       var response = new Response<AppUsers>();
-       response.Data = user;
-       if (user == null)
+       var response = new Response<AppUsersDto>();
+       if (!await _userService.UserExists(id))
        {
-           response.Message = "AppUsers not found";
+           response.Errors.Add("User not found");
            return NotFound(response);
        }
+       response.Data = await _userService.GetById(id);
        return Ok(response);
    }
    
    [HttpPost]
-   public async Task<ActionResult<Response<AppUsers>>> Post([FromBody] AppUsers appUsers)
+   public async Task<ActionResult<Response<AppUsersDto>>> Post([FromBody] AppUsersDto appUsers)
    {
-       appUsers = await _userRepository.SaveAsync(appUsers);
-       var response = new Response<AppUsers>();
-       response.Data = appUsers;
-        
+       var response = new Response<AppUsersDto>
+       {
+           Data = await _userService.SaveAsync(appUsers)
+       };
        return Created($"/api/[controller]/{appUsers.Id}",response);
    }
 
    [HttpPut]
-   public async Task<ActionResult<Response<AppUsers>>> Update([FromBody] AppUsers appUsers)
+   public async Task<ActionResult<Response<AppUsersDto>>> Update([FromBody] AppUsersDto appUsers)
    {
-       var result = await _userRepository.UpdateAsync(appUsers);
-       var response = new Response<AppUsers> { Data = result };
+       var response = new Response<AppUsersDto>();
+       if (!await _userService.UserExists(appUsers.Id))
+       {
+           response.Errors.Add("User not found");
+           return NotFound(response);
+       }
+
+       response.Data = await _userService.UpdateAsync(appUsers);
        return Ok(response);
    }
 
@@ -63,13 +71,8 @@ public class AppUsersController : ControllerBase
    public async Task<ActionResult<Response<bool>>> Delete(int id)
    {
        var response = new Response<bool>();
-       var result = await _userRepository.DeleteAsync(id);
+       var result = await _userService.DeleteAsync(id);
        response.Data = result;
-       if (result == null)
-       {
-           response.Message = "AppUsers not found";
-           return NotFound(response);
-       }
        return Ok(response);
    }
    

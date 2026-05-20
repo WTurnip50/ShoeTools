@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShoeTools.Api.Repositories.Interfaces;
+using ShoeTools.Api.Services.Interfaces;
+using ShoeTools.Core.Dto;
 using ShoeTools.Core.Entities;
 using ShoeTools.Core.Http;
 
@@ -9,67 +11,70 @@ namespace ShoeTools.Api.Controllers;
 [Route("api/[controller]")]
 public class OrdersController : ControllerBase
 {
-    private readonly IOrdersRepository _ordersRepository;
+    private readonly IOrderService _orderService;
    
-    public  OrdersController(IOrdersRepository ordersRepository)
+    public  OrdersController(IOrderService orderService)
     {
-        _ordersRepository = ordersRepository;
+        _orderService = orderService;
     }
     
     [HttpGet]
-    public async Task <ActionResult<Response<List<Orders>>>> GetAllAsync()
+    public async Task <ActionResult<Response<List<OrdersDto>>>> GetAllAsync()
     {
-        var orders = await _ordersRepository.GetAllAsync();
-        var response = new Response<List<Orders>>();
-        response.Data = orders;
+        var response = new Response<List<OrdersDto>>()
+        {
+            Data = await _orderService.GetAllOrders()
+        };
         return Ok(response);
     }
 
     [HttpGet]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<ActionResult<Response<Orders>>> GetById(int id)
     {
-        var order = await _ordersRepository.GetOrderById(id);
-        var response = new Response<Orders>();
-        response.Data = order;
-        if (order == null)
+        
+        var response = new Response<OrdersDto>();
+        if (!await _orderService.OrderExists(id))
         {
-            response.Message = "Order not found";
+            response.Errors.Add("Order not found");
             return NotFound(response);
         }
+        response.Data = await _orderService.GetById(id);
         return Ok(response);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Response<Orders>>> Post([FromBody] Orders orders)
+    public async Task<ActionResult<Response<OrdersDto>>> Post([FromBody] OrdersDto dto)
     {
-        orders = await _ordersRepository.SaveAsync(orders);
-        var response = new Response<Orders>();
-        response.Data = orders;
+
+        var response = new Response<OrdersDto>
+        {
+            Data = await _orderService.SaveAsync(dto)
+        };
         
-        return Created($"/api/[controller]/{orders.Id}",response);
+        return Created($"/api/[controller]/{dto.Id}",response);
     }
 
     [HttpPut]
-    public async Task<ActionResult<Response<Orders>>> Update([FromBody] Orders orders)
+    public async Task<ActionResult<Response<OrdersDto>>> Update([FromBody] OrdersDto dto)
     {
-        var result = await _ordersRepository.UpdateAsync(orders);
-        var response = new Response<Orders> { Data = result };
+        var response = new Response<OrdersDto>();
+        if (!await _orderService.OrderExists(dto.Id))
+        {
+            response.Errors.Add("Order not found");
+            return NotFound(response);
+        }
+        response.Data = await _orderService.UpdateAsync(dto);
         return Ok(response);
     }
 
     [HttpDelete]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<ActionResult<Response<bool>>> Delete(int id)
     {
         var response = new Response<bool>();
-        var result = await _ordersRepository.DeleteAsync(id);
+        var result = await _orderService.DeleteAsync(id);
         response.Data = result;
-        if (result == null)
-        {
-            response.Message = "Order not found";
-            return NotFound(response);
-        }
         return Ok(response);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShoeTools.Api.Repositories.Interfaces;
+using ShoeTools.Api.Services.Interfaces;
+using ShoeTools.Core.Dto;
 using ShoeTools.Core.Entities;
 using ShoeTools.Core.Http;
 
@@ -9,67 +11,68 @@ namespace ShoeTools.Api.Controllers;
 [Route("api/[controller]")]
 public class ProductDetailsController : ControllerBase
 {
-    private readonly IProductDetailsRepository _productDetailsRepository;
+    private readonly IProductDetailsService _productDetailsService;
    
-    public  ProductDetailsController(IProductDetailsRepository productDetailsRepository)
+    public  ProductDetailsController(IProductDetailsService productDetailsService)
     {
-        _productDetailsRepository = productDetailsRepository;
+        _productDetailsService = productDetailsService;
     }
     
     [HttpGet]
-    public async Task <ActionResult<Response<List<ProductDetails>>>> GetAllAsync()
+    public async Task <ActionResult<Response<List<ProductDetailsDto>>>> GetAllAsync()
     {
-        var products = await _productDetailsRepository.GetAllAsync();
-        var response = new Response<List<ProductDetails>>();
-        response.Data = products;
+        var response = new Response<List<ProductDetailsDto>>()
+        {
+            Data = await _productDetailsService.GetAllProductDetails()
+        };
         return Ok(response);
     }
 
     [HttpGet]
-    [Route("{id}")]
-    public async Task<ActionResult<Response<ProductDetails>>> GetById(int id)
+    [Route("{id:int}")]
+    public async Task<ActionResult<Response<ProductDetailsDto>>> GetById(int id)
     {
-        var product = await _productDetailsRepository.GetProductById(id);
-        var response = new Response<ProductDetails>();
-        response.Data = product;
-        if (product == null)
+        var response = new Response<ProductDetailsDto>();
+        if (!await _productDetailsService.ProductExists(id))
         {
-            response.Message = "Product not found";
+            response.Errors.Add("Product details not found");
             return NotFound(response);
         }
+        response.Data = await _productDetailsService.GetById(id);
         return Ok(response);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Response<ProductDetails>>> Post([FromBody] ProductDetails product)
+    public async Task<ActionResult<Response<ProductDetails>>> Post([FromBody] ProductDetailsDto product)
     {
-        product = await _productDetailsRepository.SaveAsync(product);
-        var response = new Response<ProductDetails>();
-        response.Data = product;
-        
-        return Created($"/api/[controller]/{product.Id}",response);
+        var response = new Response<ProductDetailsDto>
+        {
+            Data = await _productDetailsService.SaveAsync(product)
+        };
+        return Created($"/api/[controller]/{response.Data.Id}",response);
     }
 
     [HttpPut]
-    public async Task<ActionResult<Response<Product>>> Update([FromBody] ProductDetails product)
+    public async Task<ActionResult<Response<ProductDetailsDto>>> Update([FromBody] ProductDetailsDto product)
     {
-        var result = await _productDetailsRepository.UpdateAsync(product);
-        var response = new Response<ProductDetails> { Data = result };
+        var response = new Response<ProductDetailsDto>();
+        if (!await _productDetailsService.ProductExists(product.Id))
+        {
+            response.Errors.Add("Product details not found");
+            return NotFound(response);
+        }
+
+        response.Data = await _productDetailsService.UpdateAsync(product);
         return Ok(response);
     }
 
     [HttpDelete]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<ActionResult<Response<bool>>> Delete(int id)
     {
         var response = new Response<bool>();
-        var result = await _productDetailsRepository.DeleteAsync(id);
+        var result = await _productDetailsService.DeleteAsync(id);
         response.Data = result;
-        if (result == null)
-        {
-            response.Message = "Product not found";
-            return NotFound(response);
-        }
         return Ok(response);
     }
 }

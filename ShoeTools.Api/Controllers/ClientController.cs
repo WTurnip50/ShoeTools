@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ShoeTools.Api.Repositories.Interfaces;
+using ShoeTools.Api.Services.Interfaces;
+using ShoeTools.Core.Dto;
 using ShoeTools.Core.Entities;
 using ShoeTools.Core.Http;
 
@@ -9,52 +11,58 @@ namespace ShoeTools.Api.Controllers;
 [Route("api/[controller]")]
 public class ClientController : ControllerBase
 {
-    private readonly IClientRepository _clientRepository;
+    private readonly IClientService _clientService;
    
-    public  ClientController(IClientRepository clientRepository)
+    public  ClientController(IClientService clientService)
     {
-        _clientRepository = clientRepository;
+        _clientService = clientService;
     }
     
     [HttpGet]
-    public async Task <ActionResult<Response<List<Client>>>> GetAllAsync()
+    public async Task <ActionResult<Response<List<ClientDto>>>> GetAllAsync()
     {
-        var clients = await _clientRepository.GetAllAsync();
-        var response = new Response<List<Client>>();
-        response.Data = clients;
+        var response = new Response<List<ClientDto>>()
+        {
+            Data = await  _clientService.GetAllClients()
+        };
         return Ok(response);
     }
 
     [HttpGet]
     [Route("{id}")]
-    public async Task<ActionResult<Response<Client>>> GetById(int id)
+    public async Task<ActionResult<Response<ClientDto>>> GetById(int id)
     {
-        var client = await _clientRepository.GetClientById(id);
-        var response = new Response<Client>();
-        response.Data = client;
-        if (client == null)
+        var response = new Response<ClientDto>();
+        if (!await _clientService.ClientExists(id))
         {
-            response.Message = "Client not found";
+            response.Errors.Add("Client not found");
             return NotFound(response);
         }
         return Ok(response);
     }
 
     [HttpPost]
-    public async Task<ActionResult<Response<Client>>> Post([FromBody] Client client)
+    public async Task<ActionResult<Response<ClientDto>>> Post([FromBody] ClientDto client)
     {
-        client = await _clientRepository.SaveAsync(client);
-        var response = new Response<Client>();
-        response.Data = client;
+
+        var response = new Response<ClientDto>
+        {
+            Data = await _clientService.SaveAsync(client)
+        };
         
         return Created($"/api/[controller]/{client.Id}",response);
     }
 
     [HttpPut]
-    public async Task<ActionResult<Response<Client>>> Update([FromBody] Client client)
+    public async Task<ActionResult<Response<ClientDto>>> Update([FromBody] ClientDto client)
     {
-        var result = await _clientRepository.UpdateAsync(client);
-        var response = new Response<Client> { Data = result };
+        var response = new Response<ClientDto>();
+        if (!await _clientService.ClientExists(client.Id))
+        {
+            response.Errors.Add("Client not found");
+            return NotFound(response);
+        }
+        response.Data = await _clientService.UpdateAsync(client);
         return Ok(response);
     }
 
@@ -63,13 +71,8 @@ public class ClientController : ControllerBase
     public async Task<ActionResult<Response<bool>>> Delete(int id)
     {
         var response = new Response<bool>();
-        var result = await _clientRepository.DeleteAsync(id);
-        response.Data = result;
-        if (result == null)
-        {
-            response.Message = "Client not found";
-            return NotFound(response);
-        }
+       var result = await _clientService.DeleteAsync(id);
+       response.Data = result;
         return Ok(response);
     }
 }

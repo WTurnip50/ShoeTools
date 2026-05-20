@@ -2,4 +2,6 @@
   <Project Path="ShoeTools.Api/ShoeTools.Api.csproj" />
   <Project Path="ShoeTools.Core/ShoeTools.Core.csproj" />
   <Project Path="ShoeTools.Test/ShoeTools.Test.csproj" />
+  <Project Path="ShoeTools.WebApp/ShoeTools.WebApp.csproj" />
+  <Project Path="ShoeTools.Website/ShoeTools.Website.csproj" />
 </Solution>
