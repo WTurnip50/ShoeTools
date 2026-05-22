@@ -33,6 +33,15 @@ public class UserRepository : IUserRepository
         return user.IsDeleted == true ? null : user;
     }
 
+    public async Task<AppUsers> LogIn(AppUsers user)
+    {
+        const string sql = "SELECT * FROM AppUsers " +
+                           "WHERE username = @username AND" +
+                           " password = @password AND IsDeleted = 0";
+        var result = await _dbContext.Connection.QueryAsync<AppUsers>(sql, user);
+        return result.FirstOrDefault();
+    }
+
     public async Task<AppUsers> SaveAsync(AppUsers appUsers)
     {
         appUsers.Id = await _dbContext.Connection.InsertAsync(appUsers);

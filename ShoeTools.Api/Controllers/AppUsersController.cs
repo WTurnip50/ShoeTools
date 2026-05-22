@@ -41,13 +41,29 @@ public class AppUsersController : ControllerBase
        response.Data = await _userService.GetById(id);
        return Ok(response);
    }
+
+   [HttpPost]
+   [Route("login")]
+   public async Task<ActionResult<Response<AppUsersDto>>> Login([FromBody] AppUsersDto User)
+   {
+       var response = new Response<AppUsersDto>();
+       var userDto = await _userService.LogIn(new AppUsers
+       {
+           username = User.username , 
+           password = User.password
+       });
+       response.Data = userDto;
+       response.Message = "Login Successful";
+       return Ok(response);
+   }
    
    [HttpPost]
    public async Task<ActionResult<Response<AppUsersDto>>> Post([FromBody] AppUsersDto appUsers)
    {
        var response = new Response<AppUsersDto>
        {
-           Data = await _userService.SaveAsync(appUsers)
+           Data = await _userService.SaveAsync(appUsers),
+           Errors = new List<string>()
        };
        return Created($"/api/[controller]/{appUsers.Id}",response);
    }

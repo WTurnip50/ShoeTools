@@ -7,5 +7,6 @@ public class IndexModel : PageModel
 {
     public void OnGet()
     {
+        Response.Redirect("/Users/login");
     }
 }

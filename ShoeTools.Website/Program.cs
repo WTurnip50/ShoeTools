@@ -1,7 +1,13 @@
+using ShoeTools.Website.Services;
+using ShoeTools.Website.Services.Interfaces;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductDetailsService, ProductDetailsService>();
 
 var app = builder.Build();
 

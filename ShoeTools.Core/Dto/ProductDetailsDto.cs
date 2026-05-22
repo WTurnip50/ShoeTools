@@ -17,7 +17,7 @@ public class ProductDetailsDto : DtoBase
     public ProductDetailsDto(ProductDetails productDetails)
     {
         Id = productDetails.Id;
-        IdProduct = productDetails.Id;
+        IdProduct = productDetails.IdProduct;
         Model = productDetails.Model;
         Size = productDetails.Size;
         Price = productDetails.Price;

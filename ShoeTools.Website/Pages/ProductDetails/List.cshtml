@@ -1,0 +1,54 @@
+﻿@page "{id:int}"
+@model ShoeTools.Website.Pages.ProductDetails.List
+
+<div class="container-fluid">
+    <form method="get">
+        <div class="row">
+            <div class="col-md-8">
+                <input type="search" name="Id" value="@Model.Id"
+                       class="form-control" placeholder="Buscar por Id"/>
+            </div>
+            <div class="col-md-4">
+                <button id="btnSearch" class="btn btn-primary mr-3">Search</button>
+                <a asp-page=".\Edit" class="btn btn-success">Add new</a>
+            </div>
+        </div>
+    </form>
+    
+    <div class="row">
+        <div class="col-md-1"></div>
+        <div class="col-md-10">
+            <table class="table">
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Model</th>
+                    <th>Price</th>
+                    <th>Size</th>
+                    <th>Stock</th>
+                </tr>
+                
+                @foreach (var product in @Model.productDetails)
+                {
+                    <tr>
+                        <td>@product.Id</td>
+                        <td>@Model.Product.Name</td>
+                        <td>@product.Model</td>
+                        <td>@product.Price</td>
+                        <td>@product.Size</td>
+                        <td>@product.Stock</td>
+                        <td>
+                            <a asp-page="/Product/Edit" asp-route-id="@product.Id"
+                               class="btn btn-primary" role="button">Editar</a>
+                            <a asp-page="/Product/Edit" asp-route-id="@product.Id"
+                               class="btn btn-primary" role="button">Modificar stock</a>
+                            <a asp-page="/Product/Delete" asp-route-id="@product.Id"
+                               class="btn btn-danger" role="button">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+        <div class="col-md-1"></div>
+    </div>
+</div>

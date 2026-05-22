@@ -32,8 +32,7 @@ public class UserService : IUserService
             UpdatedDate = DateTime.Now
         };
         appUser = await _userRepository.SaveAsync(appUser);
-        appUser.Id = appUser.Id;
-        return user;
+        return new AppUsersDto(appUser);
     }
 
     public async Task<AppUsersDto> UpdateAsync(AppUsersDto user)
@@ -71,6 +70,17 @@ public class UserService : IUserService
             throw new Exception("User not found");
         }
         var userDto = new AppUsersDto(user);
+        return userDto;
+    }
+
+    public async Task<AppUsersDto> LogIn(AppUsers user)
+    {
+        var userLogin = await _userRepository.LogIn(user);
+        if (userLogin == null)
+        {
+            throw new Exception("User or credentials not valid.");
+        }
+        var userDto = new AppUsersDto(userLogin);
         return userDto;
     }
 }
