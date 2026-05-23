@@ -12,7 +12,7 @@ public interface IProductDetailsService
     
     Task<Response<List<ProductDetailsDto>>> GetAllProductDetails();
     
-    Task<bool> DeleteAsync(int detailsId);
+    Task<Response<bool>> DeleteAsync(int detailsId);
     
     Task<Response<ProductDetailsDto>> GetById(int detailsId);
 }

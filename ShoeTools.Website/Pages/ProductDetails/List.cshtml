@@ -6,11 +6,10 @@
         <div class="row">
             <div class="col-md-8">
                 <input type="search" name="Id" value="@Model.Id"
-                       class="form-control" placeholder="Buscar por Id"/>
+                       readonly class="form-control" placeholder="Buscar por Id"/>
             </div>
             <div class="col-md-4">
-                <button id="btnSearch" class="btn btn-primary mr-3">Search</button>
-                <a asp-page=".\Edit" class="btn btn-success">Add new</a>
+                <a asp-page=".\Add"  asp-route-id="@Model.Id" class="btn btn-success">Add new</a>
             </div>
         </div>
     </form>
@@ -38,11 +37,9 @@
                         <td>@product.Size</td>
                         <td>@product.Stock</td>
                         <td>
-                            <a asp-page="/Product/Edit" asp-route-id="@product.Id"
+                            <a asp-page="/ProductDetails/Edit" asp-route-id="@product.Id"
                                class="btn btn-primary" role="button">Editar</a>
-                            <a asp-page="/Product/Edit" asp-route-id="@product.Id"
-                               class="btn btn-primary" role="button">Modificar stock</a>
-                            <a asp-page="/Product/Delete" asp-route-id="@product.Id"
+                            <a asp-page="/ProductDetails/Delete" asp-route-id="@product.Id"
                                class="btn btn-danger" role="button">Eliminar</a>
                         </td>
                     </tr>

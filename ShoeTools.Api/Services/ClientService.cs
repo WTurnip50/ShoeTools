@@ -40,7 +40,7 @@ public class ClientService : IClientService
     public async Task<ClientDto> UpdateAsync(ClientDto client)
     {
         var dto = await _clientRepository.GetClientById(client.Id);
-        if (dto != null)
+        if (dto == null)
         {
             throw new Exception("Client not found");
         }
@@ -70,9 +70,10 @@ public class ClientService : IClientService
         var client = await _clientRepository.GetClientById(clientId);
         if (client == null)
         {
-            throw new Exception("Client nod found");
+            throw new Exception("Product not found");
         }
-        var clientDto = new ClientDto(client);
-        return clientDto;
+
+        var productDto = new ClientDto(client);
+        return productDto;
     }
 }

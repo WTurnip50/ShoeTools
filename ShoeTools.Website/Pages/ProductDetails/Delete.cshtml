@@ -1,0 +1,84 @@
+﻿@page "{id:int}"
+@model ShoeTools.Website.Pages.ProductDetails.DeleteModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Eliminar Talla de Producto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"/>
+    <style>
+        body {
+            background: linear-gradient(135deg, #4e73df, #1cc88a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="card shadow-lg">
+    <div class="card-header bg-primary text-white">
+        <i class="bi bi-pencil-square"></i> Editar Categoría de Producto
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <input type="hidden" asp-for="ProductDetailsDto.Id"/>
+            <input type="hidden" asp-for="ProductDetailsDto.IdProduct"/>
+
+            <div class="mb-3">
+                <label asp-for="ProductDetailsDto.Model" class="form-label"></label>
+                <input readonly asp-for="ProductDetailsDto.Model" class="form-control" maxlength="45"/>
+                <span class="text-danger" asp-validation-for="ProductDetailsDto.Model"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ProductDetailsDto.Price" class="form-label"></label>
+                <input readonly type="number" asp-for="ProductDetailsDto.Price" class="form-control" maxlength="100"/>
+                <span class="text-danger" asp-validation-for="ProductDetailsDto.Price"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ProductDetailsDto.Size" class="form-label"></label>
+                <input readonly type="number" asp-for="ProductDetailsDto.Size" class="form-control" maxlength="100"/>
+                <span class="text-danger" asp-validation-for="ProductDetailsDto.Size"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="ProductDetailsDto.Stock" class="form-label"></label>
+                <input readonly type="number" asp-for="ProductDetailsDto.Stock" class="form-control" maxlength="100"/>
+                <span class="text-danger" asp-validation-for="ProductDetailsDto.Stock"></span>
+            </div>
+            
+            <div class="text-end">
+                <button type="submit" class="btn btn-success me-2">
+                    <i class="bi bi-check-circle"></i> Delete
+                </button>
+                <a asp-page="./List" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

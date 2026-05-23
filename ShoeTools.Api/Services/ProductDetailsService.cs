@@ -31,11 +31,9 @@ public class ProductDetailsService : IProductDetailsService
             Stock =  detailsDto.Stock,
             CreatedBy = "",
             CreatedDate =  DateTime.Now,
-            UpdatedBy = "",
-            UpdatedDate =  DateTime.Now
         };
         details = await _productDetailsRepository.SaveAsync(details);
-        detailsDto.Id = details.IdProduct;
+        detailsDto.Id = details.Id;
         return detailsDto;
     }
 
@@ -46,14 +44,14 @@ public class ProductDetailsService : IProductDetailsService
        {
            throw new Exception("Product details not found");
        }
-       details.IdProduct = details.IdProduct;
-       details.Model = dto.Model;
-       details.Price = details.Price;
-       details.Size = details.Size;
-       details.Stock = details.Stock;
+       dto.IdProduct = details.IdProduct;
+       dto.Model = details.Model;
+       dto.Price = details.Price;
+       dto.Size = details.Size;
+       dto.Stock = details.Stock;
        
        await _productDetailsRepository.UpdateAsync(dto);
-       return details;
+       return new ProductDetailsDto(dto);
     }
 
     public async Task<List<ProductDetailsDto>> GetAllProductDetails()

@@ -29,7 +29,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet]
-    [Route("{id}")]
+    [Route("{id:int}")]
     public async Task<ActionResult<Response<ClientDto>>> GetById(int id)
     {
         var response = new Response<ClientDto>();
@@ -38,6 +38,8 @@ public class ClientController : ControllerBase
             response.Errors.Add("Client not found");
             return NotFound(response);
         }
+
+        response.Data = await _clientService.GetById(id);
         return Ok(response);
     }
 

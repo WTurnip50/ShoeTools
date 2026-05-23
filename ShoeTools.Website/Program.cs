@@ -8,6 +8,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductDetailsService, ProductDetailsService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 
 var app = builder.Build();
 

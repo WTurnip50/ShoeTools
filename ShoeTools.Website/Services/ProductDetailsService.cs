@@ -16,12 +16,26 @@ public class ProductDetailsService : IProductDetailsService
 
     public async Task<Response<ProductDetailsDto>> SaveAsync(ProductDetailsDto detailsDto)
     {
-        throw new NotImplementedException();
+        var url = $"{_baseUrl}{_endpoint}";
+        var jsonRequest = JsonConvert.SerializeObject(detailsDto);
+        var content = new StringContent(jsonRequest, System.Text.Encoding.UTF8, "application/json");
+        var client = new HttpClient();
+        var res = await client.PostAsync(url, content);
+        var json = await res.Content.ReadAsStringAsync();
+        var response = JsonConvert.DeserializeObject<Response<ProductDetailsDto>>(json);
+        return response;
     }
 
     public async Task<Response<ProductDetailsDto>> UpdateAsync(ProductDetailsDto details)
     {
-        throw new NotImplementedException();
+        var url = $"{_baseUrl}{_endpoint}";
+        var jsonRequest = JsonConvert.SerializeObject(details);
+        var content = new StringContent(jsonRequest, System.Text.Encoding.UTF8, "application/json");
+        var client = new HttpClient();
+        var res = await client.PutAsync(url, content);
+        var json = await res.Content.ReadAsStringAsync();
+        var response = JsonConvert.DeserializeObject<Response<ProductDetailsDto>>(json);
+        return response;
     }
 
     public async Task<Response<List<ProductDetailsDto>>> GetAllProductDetails()
@@ -35,13 +49,23 @@ public class ProductDetailsService : IProductDetailsService
         return response;
     }
 
-    public async Task<bool> DeleteAsync(int detailsId)
+    public async Task<Response<bool>> DeleteAsync(int detailsId)
     {
-        throw new NotImplementedException();
+        var url = $"{_baseUrl}{_endpoint}/{detailsId}";
+        var client = new HttpClient();
+        var res = await client.DeleteAsync(url);
+        var json = await res.Content.ReadAsStringAsync();
+        var response = JsonConvert.DeserializeObject<Response<bool>>(json);
+        return response;
     }
 
     public async Task<Response<ProductDetailsDto>> GetById(int detailsId)
     {
-        throw new NotImplementedException();
+        var url = $"{_baseUrl}{_endpoint}/{detailsId}";
+        var client =  new HttpClient();
+        var res = await client.GetAsync(url);
+        var json = await res.Content.ReadAsStringAsync();
+        var response = JsonConvert.DeserializeObject<Response<ProductDetailsDto>>(json);
+        return response;
     }
 }

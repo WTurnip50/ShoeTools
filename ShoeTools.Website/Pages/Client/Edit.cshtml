@@ -1,0 +1,89 @@
+﻿@page
+@model ShoeTools.Website.Pages.Client.Edit
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Editar Categoría de Producto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"/>
+    <style>
+        body {
+            background: linear-gradient(135deg, #4e73df, #1cc88a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 600px;
+            border-radius: 12px;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-header {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="card shadow-lg">
+    <div class="card-header bg-primary text-white">
+        <i class="bi bi-pencil-square"></i> Editar Producto
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <input type="hidden" asp-for="Client.Id"/>
+
+            <div class="mb-3">
+                <label asp-for="Client.Name" class="form-label"></label>
+                <input asp-for="Client.Name" class="form-control" maxlength="45"/>
+                <span class="text-danger" asp-validation-for="Client.Name"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Client.PhoneNumber" class="form-label"></label>
+                <input asp-for="Client.PhoneNumber" class="form-control" maxlength="100"/>
+                <span class="text-danger" asp-validation-for="Client.PhoneNumber"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Client.Email" class="form-label" ></label>
+                <input asp-for="Client.Email" class="form-control" maxlength="120"/>
+                <span class="text-danger" asp-validation-for="Client.Email"></span>
+            </div>
+
+            @if (Model.Errors.Count > 0)
+            {
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                        @foreach (var error in Model.Errors)
+                        {
+                            <li>@error</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-success me-2">
+                    <i class="bi bi-check-circle"></i> Guardar
+                </button>
+                <a asp-page="./List" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

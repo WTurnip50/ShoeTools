@@ -49,7 +49,7 @@ public class ProductDetailsController : ControllerBase
         {
             Data = await _productDetailsService.SaveAsync(product)
         };
-        return Created($"/api/[controller]/{response.Data.Id}",response);
+        return Created($"/api/[controller]/{product.Id}",response);
     }
 
     [HttpPut]
