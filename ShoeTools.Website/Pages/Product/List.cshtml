@@ -33,11 +33,11 @@
                         <td>@product.Description</td>
                         <td>
                             <a asp-page="/Product/Edit" asp-route-id="@product.Id"
-                               class="btn btn-primary" role="button">Editar</a>
+                               class="btn btn-primary" role="button">Edit</a>
                             <a asp-page="/ProductDetails/List" asp-route-id="@product.Id"
-                               class="btn btn-primary" role="button">Modificar stock</a>
+                               class="btn btn-primary" role="button">Edit stock</a>
                             <a asp-page="/Product/Delete" asp-route-id="@product.Id"
-                               class="btn btn-danger" role="button">Eliminar</a>
+                               class="btn btn-danger" role="button">Delete</a>
                         </td>
                     </tr>
                 }

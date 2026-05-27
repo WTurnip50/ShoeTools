@@ -38,19 +38,20 @@ public class OrderDetailsService : IOrderDetailsService
 
     public async Task<OrderDetailsDto> UpdateAsync(OrderDetailsDto detailsDto)
     {
-        var order = await _orderDetailsRepository.GetOrderItemById(detailsDto.OrderID);
-        if (order != null)
+        var order = await _orderDetailsRepository.GetOrderItemById(detailsDto.Id);
+        if (order == null)
         {
             throw new Exception("Order Not Found");
         }
-        order.OrderID = detailsDto.OrderID;
+        
         order.ProductID = detailsDto.ProductID;
         order.UnitPrice = detailsDto.UnitPrice;
         order.Quantity = detailsDto.Quantity;
-        order.UpdatedBy = "";
+        order.UpdatedBy = "System";
         order.UpdatedDate = DateTime.Now;
-        await _orderDetailsRepository.UpdateAsync(order);
-        return detailsDto;
+        
+        var response = await _orderDetailsRepository.UpdateAsync(order);
+        return new OrderDetailsDto(response);
     }
 
     public async Task<List<OrderDetailsDto>> GetAllOrders()

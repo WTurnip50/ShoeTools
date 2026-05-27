@@ -16,6 +16,7 @@ public class OrdersDto : DtoBase
 
     public OrdersDto(Orders order)
     {
+        Id = order.Id;
         ClientId = order.ClientId;
         OrderDate = order.OrderDate;
         Total = order.Total;

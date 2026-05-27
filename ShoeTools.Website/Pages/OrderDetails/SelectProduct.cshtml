@@ -1,5 +1,5 @@
 ﻿@page "{id:int}"
-@model ShoeTools.Website.Pages.ProductDetails.AddModel
+@model ShoeTools.Website.Pages.OrderDetails.SelectProduct
 
 @{
     Layout = null;
@@ -38,35 +38,18 @@
 <body>
 <div class="card shadow-lg">
     <div class="card-header bg-primary text-white">
-        <i class="bi bi-pencil-square"></i> Agregar un registro nuevo
+        <i class="bi bi-pencil-square"></i> Agregar Producto a orden
     </div>
     <div class="card-body">
         <form method="post">
-            <input type="hidden" asp-for="ProductDetailsDto.IdProduct" />
-            <div class="mb-3">
-                <label asp-for="ProductDetailsDto.Model" class="form-label"></label>
-                <input asp-for="ProductDetailsDto.Model" class="form-control" maxlength="45"/>
-                <span class="text-danger" asp-validation-for="ProductDetailsDto.Model"></span>
+            
+            <div class="form-group">
+                <label for="client">Producto</label>
+                <select asp-for="OrderDetailsDto.ProductID" class="form-control" asp-items="@(new SelectList(Model.Products, "Id", "Name"))">
+                    <option value="">-- Selecciona un Producto --</option>
+                </select>
             </div>
-
-            <div class="mb-3">
-                <label asp-for="ProductDetailsDto.Price" class="form-label"></label>
-                <input type="number" asp-for="ProductDetailsDto.Price" class="form-control" maxlength="100"/>
-                <span class="text-danger" asp-validation-for="ProductDetailsDto.Price"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="ProductDetailsDto.Size" class="form-label"></label>
-                <input type="number" asp-for="ProductDetailsDto.Size" class="form-control" maxlength="100"/>
-                <span class="text-danger" asp-validation-for="ProductDetailsDto.Size"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="ProductDetailsDto.Stock" class="form-label"></label>
-                <input type="number" asp-for="ProductDetailsDto.Stock" class="form-control" maxlength="100"/>
-                <span class="text-danger" asp-validation-for="ProductDetailsDto.Stock"></span>
-            </div>
-
+            
             @if (Model.Errors.Count > 0)
             {
                 <div class="alert alert-danger" role="alert">
